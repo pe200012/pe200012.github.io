@@ -2,7 +2,12 @@
 version: 2.1
 # Use a package of configuration called an orb.
 
-workflows:
+on:
+  push:
+    branch:
+      - hakyll
+
+jobs:
   build:
     runs-on: haskell-latest
     steps:
