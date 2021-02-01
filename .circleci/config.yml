@@ -38,10 +38,6 @@ jobs:
       - run:
           name: Generate site
           command: stack --no-terminal exec site build
-      - save_cache:
-          name: Cache site
-          paths:
-            - "_site"
       - run:
           name: Push to master
           command: |
