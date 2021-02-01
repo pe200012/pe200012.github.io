@@ -18,7 +18,6 @@ jobs:
           # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
           name: Restore Cached Dependencies
           keys:
-            - pe200012.github.io-{{ checksum "stack.yaml" }}-{{ checksum "package.yaml" }}
             - pe200012.github.io-{{ checksum "stack.yaml" }}
       - run:
           name: Resolve/Update Dependencies
