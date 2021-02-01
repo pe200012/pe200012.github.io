@@ -24,9 +24,6 @@ jobs:
           name: Resolve/Update Dependencies
           command: stack --no-terminal setup
       - run:
-          name: Run tests
-          command: stack --no-terminal test
-      - run:
           name: Build executable
           command: stack --no-terminal build
       - save_cache:
@@ -37,7 +34,9 @@ jobs:
             - ".stack-work"
       - run:
           name: Generate site
-          command: stack --no-terminal exec site build
+          command: |
+            stack --no-terminal exec site clean
+            stack --no-terminal exec site build
       - run:
           name: Push to master
           command: |
