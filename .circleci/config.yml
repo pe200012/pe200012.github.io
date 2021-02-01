@@ -1,0 +1,55 @@
+version: 2.1
+
+on:
+  push:
+    branch:
+      - hakyll
+
+jobs:
+  build:
+    docker:
+      - image: fpco/stack-build:lts
+        auth:
+          username: mydockerhub-user
+          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
+    steps:
+      - checkout
+      - restore_cache:
+          # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
+          name: Restore Cached Dependencies
+          keys:
+            - pe200012.github.io-{{ checksum "stack.yaml" }}-{{ checksum "package.yaml" }}
+            - pe200012.github.io-{{ checksum "stack.yaml" }}
+      - run:
+          name: Resolve/Update Dependencies
+          command: stack --no-terminal setup
+      - run:
+          name: Run tests
+          command: stack --no-terminal test
+      - run:
+          name: Build executable
+          command: stack --no-terminal build
+      - save_cache:
+          name: Cache Dependencies
+          key: pe200012.github.io-{{ checksum "stack.yaml" }}-{{ checksum "package.yaml" }}
+          paths:
+            - "/root/.stack"
+            - ".stack-work"
+      - run:
+          name: Generate site
+          command: stack --no-terminal exec site build
+      - save_cache:
+          name: Cache site
+          paths:
+            - "_site"
+      - run:
+          name: Push to master
+          command: |
+            cd _site
+            git config credential.helper 'cache --timeout=120'
+            git config user.email "1326263755@qq.com"
+            git config user.name "pe200012"
+            git add -A
+            git commit -m "Update via CircleCI"
+            git push -q https://e59a3885204f3b7ff860c9bd515fbc4b14f85bf2@github.com/pe200012/pe200012.github.io.git master
+
