@@ -34,5 +34,5 @@
 
 .sidebar-display-button:hover .sidebar-display-button:active{
   box-shadow: 0 0 3px #515151;
-  background-color: rgba(255, 255, 255, .1);
+  background-color: rgba(255, 255, 255, .5);
 }

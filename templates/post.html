@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>My Hakyll Blog - $title$</title>
     <link rel="stylesheet" href="/css/post.css" />
     <link rel="icon" href="/images/favicon.ico">
@@ -15,9 +15,9 @@
         <header class="header-container">
             <div class="header-content">
                 $if(banner)$
-                    <div class="post-image" style="background-image:url(/images/$banner$);"></div>
+                <div class="post-image" style="background-image:url(/images/$banner$);"></div>
                 $else$
-                    <div class="post-image" style="background-image:url(/images/default-banner.png);"></div>
+                <div class="post-image" style="background-image:url(/images/default-banner.png);"></div>
                 $endif$
                 <div class="post-text">
                     $if(title)$
@@ -26,7 +26,7 @@
                     $if(subtitle)$
                     <h2 class="title-sub-wrap">$subtitle$</h2>
                     $endif$
-                    <h2 class="title-sub-wrap"><strong>pe200012</strong> - 
+                    <h2 class="title-sub-wrap"><strong>pe200012</strong> -
                         $if(date)$
                         $date$
                         $endif$
