@@ -1,9 +1,6 @@
 
 resolver: lts-17.0
 
-packages:
-- .
-
 extra-deps:
 - hakyll-4.13.4.1
 - pandoc-2.10.1@sha256:23d7ec480c7cb86740475a419d6ca4819987b6dd23bbae9b50bc3d42a7ed2f9f,36933

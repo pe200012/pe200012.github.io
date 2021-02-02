@@ -30,6 +30,7 @@
                 </div>
             </div>
         </header>
+        $partial("templates/sidebar.html")$
         <div class="body-container float">
             <div class="content-container article-list">
                 <div class="card-container card-articles">
@@ -37,10 +38,10 @@
                         $for(posts)$
                         <div class="card-item img">
                             <article>
-                                <div class="card-cover" style="background-image:url(/images/default-banner.png);"></div>
+                                <div class="card-cover" style="background-image:url(/images/$banner$);"></div>
                                 <a class="article-link card-link" href="$url$"></a>
                                 <h2 class="article-title">$title$</h2>
-                                <div class="article-meta"><strong>author</strong> - <a class="article-date">$date$</a>
+                                <div class="article-meta"><strong>pe200012</strong> - <a class="article-date">$date$</a>
                                 </div>
                             </article>
                         </div>

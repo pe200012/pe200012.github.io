@@ -6,7 +6,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>My Hakyll Blog - $title$</title>
-    <link rel="stylesheet" href="/css/default.css" />
+    <link rel="stylesheet" href="/css/post.css" />
     <link rel="icon" href="/images/favicon.ico">
 </head>
 
@@ -26,13 +26,21 @@
                     $if(subtitle)$
                     <h2 class="title-sub-wrap">$subtitle$</h2>
                     $endif$
+                    <h2 class="title-sub-wrap"><strong>pe200012</strong> - 
+                        $if(date)$
+                        $date$
+                        $endif$
+                    </h2>
                 </div>
             </div>
         </header>
+        $partial("templates/sidebar.html")$
         <div class="body-container">
             <article class="content-container article-container">
                 <div class="article-content">
-                    $body$
+                    <div class="article-entry">
+                        $body$
+                    </div>
                 </div>
             </article>
         </div>

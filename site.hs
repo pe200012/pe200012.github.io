@@ -2,7 +2,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 import           Data.Monoid                    ( mappend )
 import           Hakyll
-
+import           Text.Regex.TDFA                ( (=~) )
 
 --------------------------------------------------------------------------------
 main :: IO ()
@@ -42,7 +42,7 @@ main = hakyll $ do
         route idRoute
         compile $ do
             posts <- recentFirst =<< loadAll "posts/*"
-            let archiveCtx = listField "posts" postCtx (return posts) `mappend` constField "title" "Archives" `mappend` defaultContext
+            let archiveCtx = listField "posts" postCtx (return posts) <> constField "title" "Archives" <> defaultContext
 
             makeItem ""
                 >>= loadAndApplyTemplate "templates/archive.html" archiveCtx
@@ -62,4 +62,7 @@ main = hakyll $ do
 
 --------------------------------------------------------------------------------
 postCtx :: Context String
-postCtx = dateField "date" "%B %e, %Y" `mappend` defaultContext
+postCtx = dateField "date" "%B %e, %Y" <> defaultContext
+
+fourth :: (a, b, c, d) -> d
+fourth (_, _, _, x) = x
