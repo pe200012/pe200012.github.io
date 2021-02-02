@@ -7,13 +7,20 @@ import           Hakyll
 --------------------------------------------------------------------------------
 main :: IO ()
 main = hakyll $ do
+    match "scripts/*" $ do
+        route idRoute
+        compile copyFileCompiler
     match "fonts/*" $ do
-        route idRoute 
-        compile copyFileCompiler 
+        route idRoute
+        compile copyFileCompiler
 
     match "images/*" $ do
         route idRoute
         compile copyFileCompiler
+
+    match "css/code/css/*" $ do
+        route $ gsubRoute "css/code/css" (const "css/code")
+        compile compressCssCompiler
 
     match "css/*" $ do
         route idRoute
@@ -21,14 +28,14 @@ main = hakyll $ do
 
     match (fromList ["about.rst", "contact.markdown"]) $ do
         route $ setExtension "html"
-        compile $ pandocCompiler >>= loadAndApplyTemplate "templates/default.html" defaultContext >>= relativizeUrls
+        compile $ pandocCompiler >>= loadAndApplyTemplate "templates/post.html" defaultContext >>= relativizeUrls
 
     match "posts/*" $ do
         route $ setExtension "html"
         compile
             $   pandocCompiler
-            >>= loadAndApplyTemplate "templates/post.html"    postCtx
-            >>= loadAndApplyTemplate "templates/default.html" postCtx
+            >>= loadAndApplyTemplate "templates/post.html" postCtx
+            -- >>= loadAndApplyTemplate "templates/default.html" postCtx
             >>= relativizeUrls
 
     create ["archive.html"] $ do
@@ -39,7 +46,7 @@ main = hakyll $ do
 
             makeItem ""
                 >>= loadAndApplyTemplate "templates/archive.html" archiveCtx
-                >>= loadAndApplyTemplate "templates/default.html" archiveCtx
+                -- >>= loadAndApplyTemplate "templates/default.html" archiveCtx
                 >>= relativizeUrls
 
 
@@ -47,8 +54,8 @@ main = hakyll $ do
         route idRoute
         compile $ do
             posts <- recentFirst =<< loadAll "posts/*"
-            let indexCtx = listField "posts" postCtx (return posts) `mappend` defaultContext
-            getResourceBody >>= applyAsTemplate indexCtx >>= loadAndApplyTemplate "templates/default.html" indexCtx >>= relativizeUrls
+            let indexCtx = listField "posts" postCtx (return posts) <> defaultContext
+            getResourceBody >>= applyAsTemplate indexCtx >>= loadAndApplyTemplate "templates/index.html" indexCtx >>= relativizeUrls
 
     match "templates/*" $ compile templateBodyCompiler
 

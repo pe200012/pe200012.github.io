@@ -1,3 +1,6 @@
 [submodule "_site"]
 	path = _site
 	url = https://github.com/pe200012/pe200012.github.io.git
+[submodule "css/code"]
+	path = css/code
+	url = https://github.com/tejasbubane/hakyll-css
