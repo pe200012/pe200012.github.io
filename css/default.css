@@ -1,6 +1,10 @@
 
 @import url("sidebar.css");
 
+html {
+  font-family: 'Source Han Sans, PingFang SC, Microsoft YaHei, WenQuanYi Micro Hei, serif';
+}
+
 a, abbr, acronym, address, applet, article, aside, audio, big, blockquote, body, canvas, caption, cite, code, dd, del, details, dfn, div, dl, dt, em, embed, fieldset, figcaption, figure, footer, form, h1, h2, h3, h4, h5, h6, header, hgroup, html, iframe, img, ins, kbd, label, legend, li, mark, menu, nav, object, ol, output, p, pre, q, ruby, s, samp, section, small, span, strike, strong, sub, summary, sup, table, tbody, td, tfoot, th, thead, time, tr, tt, ul, var, video {
   margin: 0;
   padding: 0;
@@ -191,10 +195,10 @@ blockquote, q {
   z-index: auto;
 }
 
-@font-face {
-  font-family: 'Source Han Sans';
+/* @font-face {
+  font-family: 'Source Han Sans, PingFang SC, Microsoft YaHei, WenQuanYi Micro Hei, serif';
   src: url('/fonts/Source Han Sans.ttf');
-}
+} */
 
 .page-container {
   margin: 20px auto;
