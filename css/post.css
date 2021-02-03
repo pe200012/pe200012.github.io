@@ -1,36 +1,49 @@
 @import url('default.css');
+.header-container.post .post-text {
+  text-align: left;
+}
 
 .post-text {
-  z-index: 100;
-  /* margin-left: -30%; */
-  width: 860px;
   max-width: 100%;
   max-height: 100%;
-  text-align: left;
   overflow: hidden;
   padding: 0 20px;
-  text-align: left;
   color: #fff;
-  font-family: "Source Han Sans";
-  /* text-shadow: #000 0px 0px 1px; */
+}
+
+@media screen and (max-width: 767px) {
+  .post-text {
+    width: 90vw;
+  }
+  .title-wrap {
+    font-size: 20px;
+    margin: 20px 0;
+  }
+  .title-sub-wrap {
+    font-size: 14px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .post-text {
+    width: 820px;
+  }
+  .title-wrap {
+    font-size: 28px;
+    margin: 25px 0;
+  }
+  .title-sub-wrap {
+    font-size: 16px;
+  }
 }
 
 .title-wrap {
-	font-weight: 700;
-	line-height: 1.5;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	word-break: break-word;
-	opacity: .9;
-}
-
-.title-wrap {
-	font-size: 28px;
-	margin: 25px 0;
-}
-
-.title-sub-wrap {
-  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.5;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+  opacity: .9;
 }
 
 .title-sub-wrap {
