@@ -33,6 +33,11 @@ dependencies:
 - base >= 4.7 && < 5
 - hakyll
 - regex-tdfa
+- process
+- bytestring
+- shelly
+- directory
+- extra
 
 executables:
   site:
