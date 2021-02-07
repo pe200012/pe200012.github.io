@@ -12,6 +12,24 @@ a, abbr, acronym, address, applet, article, aside, audio, big, blockquote, body,
   font-size: 100%;
 }
 
+small, sub, sup {
+  font-size: .83em
+}
+
+sub {
+  vertical-align: sub
+}
+
+sup {
+  vertical-align: super
+}
+
+a:hover, a:visited, a:link, a:active
+{
+    text-decoration: none;
+}
+
+
 .root-container {
   position: relative;
 }
