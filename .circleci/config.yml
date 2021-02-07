@@ -38,8 +38,8 @@ jobs:
             - ".stack-work"
       - run:
           name: Generate site
-          command: |
           no_output_timeout: 60m
+          command: |
             stack --no-terminal exec site clean
             stack --no-terminal exec site build
       - run:
