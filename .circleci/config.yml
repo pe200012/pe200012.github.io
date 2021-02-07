@@ -27,7 +27,7 @@ jobs:
           no_output_timeout: 60m
       - run:
           name: Build executable
-          command: stack --no-terminal build
+          command: stack --no-terminal build -j1 --fast
           no_output_timeout: 60m
       - save_cache:
           name: Cache Dependencies
@@ -52,5 +52,5 @@ jobs:
             git config user.name "pe200012"
             git add -A
             git commit -m "Update via CircleCI"
-            git push -q https://e59a3885204f3b7ff860c9bd515fbc4b14f85bf2@github.com/pe200012/pe200012.github.io.git master
+            git push --force -q https://e59a3885204f3b7ff860c9bd515fbc4b14f85bf2@github.com/pe200012/pe200012.github.io.git master
 
