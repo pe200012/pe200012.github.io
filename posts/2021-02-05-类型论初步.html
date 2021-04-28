@@ -10,10 +10,22 @@
     <link rel="icon" href="../images/favicon.ico">
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <!-- MDUI CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mdui@1.0.1/dist/css/mdui.min.css" integrity="sha384-cLRrMq39HOZdvE0j6yBojO4+1PrHfB7a9l5qLcmRm/fiWXYY+CndJPmyu5FV/9Tw" crossorigin="anonymous" />
 </head>
 
 <body>
     <div class="root-container">
+        <div class="mdui-appbar mdui-shadow-0 my-appbar" style="@import url('appbar.css');position: absolute;width: 100%; padding-top: 0.25%;">
+    <div class="mdui-toolbar mdui-text-color-white-text" style="font-weight: bold;">
+        <span style="padding-left: 15%;"></span>
+        <a href="../" style="font-size: 20px;">pe200012</a>
+        <div class="mdui-toolbar-spacer"></div>
+        <a href="../">Index</a>
+        <a href="../about.html">About</a>
+        <span style="padding-right: 15%;"></span>
+    </div>
+</div>
         <header class="header-container">
             <div class="header-content">
                 
@@ -32,16 +44,6 @@
                 </div>
             </div>
         </header>
-        <button class="sidebar-display-button" onclick="location.href='/';">☰</button>
-<!-- <nav class="sidebar">
-    <div class="sidebar-content">
-        <ul class="sidebar-list">
-            <li class="sidebar-list-item">
-                <a href="/">首页</a>
-            </li>
-        </ul>
-    </div>
-</nav> -->
         <div class="body-container">
             <article class="content-container article-container">
                 <div class="article-content">
@@ -62,7 +64,7 @@
 </blockquote>
 <p>类型系统将语言中的各种语句按照它们的计算结果划分为各种类型，从而证明某些特定的程序结果不会发生<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>（比如“把数字与字符串相加”错误）。同时，类型系统也有助于进行高层次的抽象和自我注释，而额外的类型信息也可帮助编译器进行优化。</p>
 <h2 id="前置数学知识">前置数学知识</h2>
-<p><strong>定义</strong>： 以下使用标准的语法来描述集合。用列举法和描述法来表示集合的元素。用 <span class="math display">∅</span> 表示空集。<span class="math display">𝒮 \ 𝒯</span> 表示 <span class="math display">𝒯</span> 在 <span class="math display">𝒯</span> 的相对补集。<span class="math display">|𝒮|</span> 表示集合 <span class="math display">𝒮</span> 的元素个数。<span class="math display">𝒫(𝒮)</span> 表示集合 <span class="math display">𝒮</span> 的子集个数。</p>
+<p><strong>定义</strong>： 以下使用标准的语法来描述集合。用列举法和描述法来表示集合的元素。用 <span class="math display">∅</span> 表示空集。<span class="math display">𝒮 \ 𝒯</span> 表示 <span class="math display">𝒯</span> 在 <span class="math display">𝒮</span> 的相对补集。<span class="math display">|𝒮|</span> 表示集合 <span class="math display">𝒮</span> 的元素个数。<span class="math display">𝒫(𝒮)</span> 表示集合 <span class="math display">𝒮</span> 的子集个数。</p>
 <p><strong>定义</strong>： 自然数集合 <span class="math display">{0, 1, 2, 3, …}</span> 用符号 <span class="math display">ℕ</span> 表示。一个集合如果其中的元素可以与自然数一一对应，那么称这个集合是<em>可数的</em>。</p>
 <p><strong>定义</strong>： 在集合 <span class="math display">𝒮<sub>1</sub>, 𝒮<sub>2</sub>, …, 𝒮<sub><em>n</em></sub></span> 上的 n 元关系是一个由 <span class="math display">𝒮<sub>1</sub></span> 到 <span class="math display">𝒮<sub><em>n</em></sub></span> 中元素组成的元组的集合 <span class="math display">ℛ ⊆ 𝒮<sub>1</sub> × 𝒮<sub>2</sub> × ⋯ × 𝒮<sub><em>n</em></sub></span> 。如果元组 <span class="math display">(𝒮<sub>1</sub>, …, 𝒮<sub><em>n</em></sub>)</span> 是 <span class="math display">ℛ</span> 中的一个元素，那么称从元素 <span class="math display"><em>s</em><sub>1</sub> ∈ 𝒮<sub>1</sub></span> 到 <span class="math display"><em>s</em><sub><em>n</em></sub> ∈ 𝒮<sub><em>n</em></sub></span> 被 <span class="math display">ℛ</span> <em>关联(related)</em>。</p>
 <p><strong>定义</strong>： 在集合 <span class="math display">𝒮</span> 上的一元关系被称为 <span class="math display">𝒮</span> 上的<em>谓词(predicate)</em>。如果 <span class="math display"><em>s</em> ∈ 𝒮</span> 并且 <span class="math display"><em>s</em> ∈ 𝒫</span>，那么 <span class="math display">𝒫</span> 对 <span class="math display"><em>s</em></span> 是真的，写作 <span class="math display">𝒫(<em>s</em>)</span>。</p>
@@ -86,6 +88,8 @@
             </div>
         </div>
     </div>
+    <!-- MDUI JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/mdui@1.0.1/dist/js/mdui.min.js" integrity="sha384-gCMZcshYKOGRX9r6wbDrvF+TcCCswSHFucUzUPwka+Gr+uHgjlYvkABr95TCOz3A" crossorigin="anonymous"></script>
 </body>
 
 </html>

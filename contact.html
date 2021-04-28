@@ -10,10 +10,22 @@
     <link rel="icon" href="./images/favicon.ico">
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <!-- MDUI CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mdui@1.0.1/dist/css/mdui.min.css" integrity="sha384-cLRrMq39HOZdvE0j6yBojO4+1PrHfB7a9l5qLcmRm/fiWXYY+CndJPmyu5FV/9Tw" crossorigin="anonymous" />
 </head>
 
 <body>
     <div class="root-container">
+        <div class="mdui-appbar mdui-shadow-0 my-appbar" style="@import url('appbar.css');position: absolute;width: 100%; padding-top: 0.25%;">
+    <div class="mdui-toolbar mdui-text-color-white-text" style="font-weight: bold;">
+        <span style="padding-left: 15%;"></span>
+        <a href="./" style="font-size: 20px;">pe200012</a>
+        <div class="mdui-toolbar-spacer"></div>
+        <a href="./">Index</a>
+        <a href="./about.html">About</a>
+        <span style="padding-right: 15%;"></span>
+    </div>
+</div>
         <header class="header-container">
             <div class="header-content">
                 
@@ -30,16 +42,6 @@
                 </div>
             </div>
         </header>
-        <button class="sidebar-display-button" onclick="location.href='/';">☰</button>
-<!-- <nav class="sidebar">
-    <div class="sidebar-content">
-        <ul class="sidebar-list">
-            <li class="sidebar-list-item">
-                <a href="/">首页</a>
-            </li>
-        </ul>
-    </div>
-</nav> -->
         <div class="body-container">
             <article class="content-container article-container">
                 <div class="article-content">
@@ -58,6 +60,8 @@
             </div>
         </div>
     </div>
+    <!-- MDUI JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/mdui@1.0.1/dist/js/mdui.min.js" integrity="sha384-gCMZcshYKOGRX9r6wbDrvF+TcCCswSHFucUzUPwka+Gr+uHgjlYvkABr95TCOz3A" crossorigin="anonymous"></script>
 </body>
 
 </html>
