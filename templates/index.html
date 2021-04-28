@@ -7,12 +7,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>My Hakyll Blog - $title$</title>
     <link rel="stylesheet" href="/css/index.css" />
+    <!-- <link rel="stylesheet" href="/css/sidebar.css" /> -->
     <link rel="icon" href="/images/favicon.ico">
+    <!-- MDUI CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mdui@1.0.1/dist/css/mdui.min.css"
+        integrity="sha384-cLRrMq39HOZdvE0j6yBojO4+1PrHfB7a9l5qLcmRm/fiWXYY+CndJPmyu5FV/9Tw" crossorigin="anonymous" />
+
 
 </head>
 
 <body>
     <div class="root-container">
+        $partial("templates/appbar.html")$
         <header class="header-container">
             <div class="header-content">
                 $if(banner)$
@@ -30,7 +36,6 @@
                 </div>
             </div>
         </header>
-        $partial("templates/sidebar.html")$
         <div class="body-container float">
             <div class="content-container article-list">
                 <div class="card-container card-articles">
@@ -69,6 +74,11 @@
                 </footer>
             </div>
         </div>
+
+        <!-- MDUI JavaScript -->
+        <script src="https://cdn.jsdelivr.net/npm/mdui@1.0.1/dist/js/mdui.min.js"
+            integrity="sha384-gCMZcshYKOGRX9r6wbDrvF+TcCCswSHFucUzUPwka+Gr+uHgjlYvkABr95TCOz3A"
+            crossorigin="anonymous"></script>
 </body>
 
 </html>
