@@ -1,1 +1,19 @@
 .my-appbar {}
+
+@media screen and (max-width: 767px) {
+    .left-padding-span {
+        width: 0;
+    }
+    .right-padding-span {
+        width: 0;
+    }
+}
+
+@media screen and (min-width: 768px) {
+    .left-padding-span {
+        padding-left: 15%;
+    }
+    .right-padding-span {
+        padding-right: 15%;
+    }
+}
