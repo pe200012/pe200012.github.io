@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>My Hakyll Blog - 类型论初步</title>
+    <link rel="stylesheet" href="../css/post.css" />
+    <link rel="icon" href="../images/favicon.ico">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <!-- MDUI CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mdui@1.0.1/dist/css/mdui.min.css" integrity="sha384-cLRrMq39HOZdvE0j6yBojO4+1PrHfB7a9l5qLcmRm/fiWXYY+CndJPmyu5FV/9Tw" crossorigin="anonymous" />
+</head>
+
+<body>
+    <div class="root-container">
+        <div class="mdui-appbar mdui-shadow-0 my-appbar" style="@import url('appbar.css');position: absolute;width: 100%; padding-top: 0.25%;">
+    <div class="mdui-toolbar mdui-text-color-white-text" style="font-weight: bold;">
+        <span class="left-padding-span"></span>
+        <a href="../" style="font-size: 20px;">pe200012</a>
+        <div class="mdui-toolbar-spacer"></div>
+        <a href="../">Index</a>
+        <a href="../about.html">About</a>
+        <span class="left-padding-span"></span>
+    </div>
+</div>
+        <header class="header-container">
+            <div class="header-content">
+                
+                <div class="post-image" style="background-image:url(/images/無題.png);"></div>
+                
+                <div class="post-text">
+                    
+                    <h1 class="title-wrap">类型论初步</h1>
+                    
+                    
+                    <h2 class="title-sub-wrap"><strong>pe200012</strong> -
+                        
+                        February  5, 2021
+                        
+                    </h2>
+                </div>
+            </div>
+        </header>
+        <div class="body-container">
+            <article class="content-container article-container">
+                <div class="article-content">
+                    <div class="article-entry">
+                        <p>Being updated actively…</p>
+<h1 id="toc">TOC</h1>
+<ol type="1">
+<li><a href="#前言">前言</a></li>
+<li><a href="#前置数学知识">前置数学知识</a></li>
+</ol>
+<hr />
+<h2 id="前言">前言</h2>
+<p>终于，我们来到了类型论的世界。为了适应时代，我们需要一种有效的方法来组织我们的程序。</p>
+<p>像霍尔逻辑这样强大的推理工具。能严格证明我们所写的程序的正确性，表达能力非常强，但对程序员的理论水平有很高的要求。如果没有足够的知识水平，难以驾驭这类工具。这使得 <code>verified programming</code> 成本巨大，难以在工业界中推广。</p>
+<p>我们需要既能保证正确性，又易用的手段来维护我们的程序。于是就有了模型检查器（model checkers）、运行时监测（run-time monitoring）等等。在这其中，应用最广泛的就是类型系统。</p>
+<blockquote>
+<p>A type system is a tractable syntactic method for proving the absence of certain program behaviors by classifying phrases according to the kinds of values they compute.</p>
+</blockquote>
+<p>类型系统将语言中的各种语句按照它们的计算结果划分为各种类型，从而证明某些特定的程序结果不会发生<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>（比如“把数字与字符串相加”错误）。同时，类型系统也有助于进行高层次的抽象和自我注释，而额外的类型信息也可帮助编译器进行优化。</p>
+<h2 id="前置数学知识">前置数学知识</h2>
+<p><strong>定义</strong>： 以下使用标准的语法来描述集合。用列举法和描述法来表示集合的元素。用 <span class="math display">∅</span> 表示空集。<span class="math display">𝒮 \ 𝒯</span> 表示 <span class="math display">𝒯</span> 在 <span class="math display">𝒮</span> 的相对补集。<span class="math display">|𝒮|</span> 表示集合 <span class="math display">𝒮</span> 的元素个数。<span class="math display">𝒫(𝒮)</span> 表示集合 <span class="math display">𝒮</span> 的子集个数。</p>
+<p><strong>定义</strong>： 自然数集合 <span class="math display">{0, 1, 2, 3, …}</span> 用符号 <span class="math display">ℕ</span> 表示。一个集合如果其中的元素可以与自然数一一对应，那么称这个集合是<em>可数的</em>。</p>
+<p><strong>定义</strong>： 在集合 <span class="math display">𝒮<sub>1</sub>, 𝒮<sub>2</sub>, …, 𝒮<sub><em>n</em></sub></span> 上的 n 元关系是一个由 <span class="math display">𝒮<sub>1</sub></span> 到 <span class="math display">𝒮<sub><em>n</em></sub></span> 中元素组成的元组的集合 <span class="math display">ℛ ⊆ 𝒮<sub>1</sub> × 𝒮<sub>2</sub> × ⋯ × 𝒮<sub><em>n</em></sub></span> 。如果元组 <span class="math display">(𝒮<sub>1</sub>, …, 𝒮<sub><em>n</em></sub>)</span> 是 <span class="math display">ℛ</span> 中的一个元素，那么称从元素 <span class="math display"><em>s</em><sub>1</sub> ∈ 𝒮<sub>1</sub></span> 到 <span class="math display"><em>s</em><sub><em>n</em></sub> ∈ 𝒮<sub><em>n</em></sub></span> 被 <span class="math display">ℛ</span> <em>关联(related)</em>。</p>
+<p><strong>定义</strong>： 在集合 <span class="math display">𝒮</span> 上的一元关系被称为 <span class="math display">𝒮</span> 上的<em>谓词(predicate)</em>。如果 <span class="math display"><em>s</em> ∈ 𝒮</span> 并且 <span class="math display"><em>s</em> ∈ 𝒫</span>，那么 <span class="math display">𝒫</span> 对 <span class="math display"><em>s</em></span> 是真的，写作 <span class="math display">𝒫(<em>s</em>)</span>。</p>
+<p><strong>定义</strong>： 集合 <span class="math display">𝒮</span> 和 <span class="math display">𝒯</span> 上的二元关系 <span class="math display">ℛ</span> 一般写作 <span class="math display"><em>s</em> ℛ <em>t</em></span>，其中 <span class="math display"><em>s</em> ∈ 𝒮, <em>t</em> ∈ 𝒯</span>。</p>
+<section class="footnotes" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1" role="doc-endnote"><p>注意，类型系统并不能保证哪些程序结果一定会发生。类型系统的<em>静态特点</em>使得它必然是保守的。无论实际运行结果如何，只要类型检查有误就不能通过编译。<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+                    </div>
+                </div>
+            </article>
+        </div>
+        <div class="footer">
+            <div class="footer-container">
+                <footer>
+                    Site proudly generated by
+                    <a href="http://jaspervdj.be/hakyll">Hakyll</a>
+                </footer>
+            </div>
+        </div>
+    </div>
+    <!-- MDUI JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/mdui@1.0.1/dist/js/mdui.min.js" integrity="sha384-gCMZcshYKOGRX9r6wbDrvF+TcCCswSHFucUzUPwka+Gr+uHgjlYvkABr95TCOz3A" crossorigin="anonymous"></script>
+</body>
+
+</html>
