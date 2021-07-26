@@ -156,7 +156,7 @@ main = do
     fs <- listDirectory "./css"
     forM_ fs $ \f -> do
         copyFile ("./css/" ++ f) ("./site/css/" ++ f)
-    (config :: [Post]) <- input auto =<< Text.readFile "test.dhall"
+    (config :: [Post]) <- input auto =<< Text.readFile "config.dhall"
     writeFile "./site/blog.html" $ renderHtml
         (blogIndex
             ((\p -> let ((_, _, _, [f]) :: (String, String, String, [String])) = postPath p =~ exceptSuffix in p { postPath = f ++ ".html" }) <$> config)
