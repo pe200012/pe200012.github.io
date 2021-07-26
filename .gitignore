@@ -1,0 +1,5 @@
+.stack-work/
+*~
+site/
+_gen/
+.vscode/
