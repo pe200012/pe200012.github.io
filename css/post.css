@@ -48,13 +48,16 @@ footer ul li
 
 a
 {
+  color           : #800080;
   text-decoration : none;
-  color           : #999999;
+  padding-bottom  : 1px;
+  border-bottom   : dashed 1px #009492;
 }
 
 a:hover
 {
-  text-decoration : underline;
+  text-decoration     : none;
+  border-bottom-style : solid;
 }
 
 h1
@@ -92,6 +95,33 @@ p.author
   margin-bottom : 0% !important;
   margin-top    : 4px !important;
   height        : 24px;
+}
+
+blockquote
+{
+  background  : #f8f8f8;
+  border-left : solid 0.5em #cccccc;
+  margin      : 0.5em 0px 0.5em 1.19999em;
+  padding     : 0.2em 0.4em 0.2em 0.4em;
+  overflow-x  : auto;
+  color       : #555555 !important;
+}
+
+code
+{
+  color            : #000000;
+  font-family      : "Fira Code","JetBrains Mono","Menlo","Andale Mono","Monaco","Consolas","DejaVu Sans Mono","Courier","Lucida Sans Unicode","monospace", sans-serif,monospace;
+  font-size        : 0.84999em;
+  background-color : #eff0f1;
+  line-height      : 1.25em;
+  border-radius    : 0.25em 0.25em 0.25em 0.25em;
+}
+
+pre
+{
+  word-wrap  : normal;
+  padding    : 4px 4px 4px 4px;
+  overflow-x : auto;
 }
 
 
