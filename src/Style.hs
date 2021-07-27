@@ -56,9 +56,13 @@ postCss = do
     nav ** ul ** li ? listItemCss
     footer ** ul ** li ? listItemCss
     a ? do
+        color (rgb 128 0 128)
         textDecoration none
-        color (rgb 153 153 153) -- rgb hex #999
-    a # hover ? textDecoration underline
+        paddingBottom (px 1)
+        borderBottom dashed (px 1) (rgb 0 148 146)
+    a # hover ? do
+        textDecoration none
+        borderBottomStyle solid
     h1 ? do
         fontSize (em 3)
     p ? do
@@ -77,6 +81,26 @@ postCss = do
         important (marginBottom (pct 0))
         important (marginTop (px 4))
         height (px 24)
+    "blockquote" ? do
+        background (rgb 248 248 248)
+        borderLeft solid (em 0.5) (rgb 204 204 204)
+        margin (em 0.5) (px 0) (em 0.5) (em 1.2)
+        padding (em 0.2) (em 0.4) (em 0.2) (em 0.4)
+        overflowX auto
+        important (color (rgb 85 85 85)) -- rgb #555
+    code ? do
+        color (rgb 0 0 0)
+        fontFamily
+            ["Fira Code", "JetBrains Mono", "Menlo", "Andale Mono", "Monaco", "Consolas", "DejaVu Sans Mono", "Courier", "Lucida Sans Unicode", "monospace"]
+            [sansSerif, monospace]
+        fontSize (em 0.85)
+        backgroundColor (rgb 239 240 241)
+        lineHeight (em 1.25)
+        borderRadius (em 0.25) (em 0.25) (em 0.25) (em 0.25)
+    pre ? do
+        wordWrap normal
+        padding (px 4) (px 4) (px 4) (px 4)
+        overflowX auto
   where
     listCss = do
         fontFamily ["Helvetica", "Arial", "Sans-Serif"] [sansSerif, monospace]
