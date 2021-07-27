@@ -29,6 +29,7 @@ dependencies:
 - dhall
 - regex-tdfa
 - pandoc
+- process
 
 library:
   source-dirs: src

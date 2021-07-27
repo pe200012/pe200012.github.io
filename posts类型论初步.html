@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="pe200012" />
+  <title>类型论初步</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <link rel="stylesheet" href="../css/post.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+   var mathElements = document.getElementsByClassName("math");
+   var macros = [];
+   for (var i = 0; i < mathElements.length; i++) {
+    var texText = mathElements[i].firstChild;
+    if (mathElements[i].tagName == "SPAN") {
+     katex.render(texText.data, mathElements[i], {
+      displayMode: mathElements[i].classList.contains('display'),
+      throwOnError: false,
+      macros: macros,
+      fleqn: false
+     });
+  }}});
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css" />
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">类型论初步</h1>
+<p class="author">pe200012</p>
+</header>
+<p>Being updated actively…</p>
+<ul>
+<li><a href="#前言">前言</a></li>
+<li><a href="#前置数学知识">前置数学知识</a></li>
+<li><a href="#程序语义">程序语义</a></li>
+</ul>
+<hr />
+<h2 id="前言">前言</h2>
+<p>终于，我们来到了类型论的世界。为了适应时代，我们需要一种有效的方法来组织我们的程序。</p>
+<p>像霍尔逻辑这样强大的推理工具。能严格证明我们所写的程序的正确性，表达能力非常强，但对程序员的理论水平有很高的要求。如果没有足够的知识水平，难以驾驭这类工具。这使得 <code>verified programming</code> 成本巨大，难以在工业界中推广。</p>
+<p>我们需要既能保证正确性，又易用的手段来维护我们的程序。于是就有了模型检查器（model checkers）、运行时监测（run-time monitoring）等等。在这其中，应用最广泛的就是类型系统。</p>
+<blockquote>
+<p>A type system is a tractable syntactic method for proving the absence of certain program behaviors by classifying phrases according to the kinds of values they compute.</p>
+</blockquote>
+<p>类型系统将语言中的各种语句按照它们的计算结果划分为各种类型，从而证明某些特定的程序结果不会发生<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>（比如“把数字与字符串相加”错误）。同时，类型系统也有助于进行高层次的抽象和自我注释，而额外的类型信息也可帮助编译器进行优化。</p>
+<h2 id="前置数学知识">前置数学知识</h2>
+<p><del>其实都是抽象代数里面的东西啦</del></p>
+<p><strong>定义</strong>： 以下使用标准的语法来描述集合。用列举法和描述法来表示集合的元素。用 <span class="math inline">\emptyset</span> 表示空集。<span class="math inline">\mathcal{S}\setminus\mathcal{T}</span> 表示 <span class="math inline">\mathcal{T}</span> 在 <span class="math inline">\mathcal{S}</span> 的相对补集。<span class="math inline">\vert\mathcal{S}\vert</span> 表示集合 <span class="math inline">\mathcal{S}</span> 的元素个数。<span class="math inline">\mathcal{P}(\mathcal{S})</span> 表示集合 <span class="math inline">\mathcal{S}</span> 的子集个数。</p>
+<p><strong>定义</strong>： 自然数集合 <span class="math inline">\{0,1,2,3,\dots\}</span> 用符号 <span class="math inline">\mathbb{N}</span> 表示。一个集合如果其中的元素可以与自然数一一对应，那么称这个集合是<em>可数的</em>。</p>
+<p><strong>定义</strong>： 在集合 <span class="math inline">\mathcal{S}_1, \mathcal{S}_2, \dots, \mathcal{S}_n</span> 上的 n 元关系是一个由 <span class="math inline">\mathcal{S}_1</span> 到 <span class="math inline">\mathcal{S}_n</span> 中元素组成的元组的集合 <span class="math inline">\mathcal{R}\subseteq\mathcal{S}_1\times\mathcal{S}_2\times\cdots\times\mathcal{S}_n</span> 。如果元组 <span class="math inline">(\mathcal{S}_1,\dots,\mathcal{S}_n)</span> 是 <span class="math inline">\mathcal{R}</span> 中的一个元素，那么称从元素 <span class="math inline">s_1\in\mathcal{S}_1</span> 到 <span class="math inline">s_n\in\mathcal{S}_n</span> 被 <span class="math inline">\mathcal{R}</span> <em>关联(related)</em>。</p>
+<p><strong>定义</strong>： 在集合 <span class="math inline">\mathcal{S}</span> 上的一元关系被称为 <span class="math inline">\mathcal{S}</span> 上的<em>谓词(predicate)</em>。如果 <span class="math inline">s\in\mathcal{S}</span> 并且 <span class="math inline">s\in\mathcal{P}</span>，那么 <span class="math inline">\mathcal{P}</span> 对 <span class="math inline">s</span> 是真的，写作 <span class="math inline">\mathcal{P}(s)</span>。</p>
+<p><strong>定义</strong>： 集合 <span class="math inline">\mathcal{S}</span> 和 <span class="math inline">\mathcal{T}</span> 上的二元关系 <span class="math inline">\mathcal{R}</span> 一般写作 <span class="math inline">s\;\mathcal{R}\; t</span>，其中 <span class="math inline">s \in \mathcal{S}, t \in \mathcal{T}</span>。</p>
+<h2 id="程序语义">程序语义</h2>
+<p>程序语言中各种操作的定义通常以三种形式呈现出来：公理语义（Axiomatic Semantics）、符号语义（Denotational Semantics）和操作语义（Operational Semantics）。</p>
+<section class="footnotes" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1" role="doc-endnote"><p>注意，类型系统并不能保证哪些程序结果一定会发生。类型系统的<em>静态特点</em>使得它必然是保守的。无论实际运行结果如何，只要类型检查有误就不能通过编译。<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+</body>
+</html>

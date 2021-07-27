@@ -38,11 +38,14 @@ import           GHC.Generics                   ( Generic )
 import           Prelude                 hiding ( readFile
                                                 , writeFile
                                                 )
-import           Style                          ( index )
+import           Style                          ( index
+                                                , postCss
+                                                )
 import           System.Directory               ( copyFile
                                                 , createDirectoryIfMissing
                                                 , listDirectory
                                                 )
+import           System.Process                 ( callProcess )
 import           Text.Blaze.Html.Renderer.Text  ( renderHtml )
 import           Text.Blaze.Html5               ( (!)
                                                 , Html
@@ -56,6 +59,7 @@ import           Text.Blaze.Html5               ( (!)
                                                 , meta
                                                 , nav
                                                 , p
+                                                , script
                                                 , title
                                                 , toHtml
                                                 , ul
@@ -68,11 +72,17 @@ import           Text.Blaze.Html5.Attributes    ( charset
                                                 , media
                                                 , name
                                                 , onclick
+                                                , onload
                                                 , rel
+                                                , src
                                                 , style
                                                 )
-import           Text.Pandoc                    ( PandocMonad
+import           Text.Pandoc                    ( HTMLMathMethod(..)
+                                                , PandocMonad
+                                                , ReaderOptions(readerExtensions)
+                                                , WriterOptions(writerHTMLMathMethod, writerReferenceLinks)
                                                 , def
+                                                , getAllExtensions
                                                 , readMarkdown
                                                 , runIOorExplode
                                                 , writeHtml5
@@ -124,12 +134,25 @@ blogIndex posts = docTypeHtml $ do
             a ! href (fromString (postPath p)) $ toHtml $ postTitle p
 
 blogPost :: Post' -> Html
-blogPost post = H.div ! class_ "post" $ do
-    h1 $ toHtml (postTitle' post)
-    H.div ! class_ "post-content" $ postContent post
+blogPost post = docTypeHtml $ do
+    H.head $ do
+        title $ toHtml (postTitle' post)
+        meta ! charset "utf-8"
+        meta ! name "viewport" ! content "width=device-width, initial-scale=1, maximum-scale=1"
+        meta ! name "description" ! content "pe200012's personal site"
+        link ! rel "stylesheet" ! href "./css/hover.css"
+        link ! rel "stylesheet" ! href "./css/post.css"
+        link ! rel "stylesheet" ! href "https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css"
+        script ! src "https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js" $ pure ()
+        script ! src "https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js" ! onload "renderMathInElement(document.body);" $ pure ()
+        script "renderMathInElement(document.body,{delimiters: [{left: \"$$\", right: \"$$\", display: true},{left: \"$\", right: \"$\", display: false}]});"
+    body $ do
+        h1 $ toHtml (postTitle' post)
+        H.div ! class_ "post-content" $ postContent post
 
-convMarkdown :: PandocMonad m => Text -> m Html
-convMarkdown = (writeHtml5 def <=< readMarkdown def) . Text.pack . unpack
+-- convMarkdown :: PandocMonad m => Text -> m Html
+-- convMarkdown =
+    -- (writeHtml5 (def { writerReferenceLinks = True }) <=< readMarkdown (def { readerExtensions = getAllExtensions "markdown" })) . Text.pack . unpack
 
 data Post = Post
     { postTitle :: Text
@@ -153,6 +176,7 @@ main = do
     createDirectoryIfMissing True "./site/posts"
     writeFile "./site/index.html" $ renderHtml siteIndex
     writeFile "./site/css/index.css" $ render index
+    writeFile "./site/css/post.css" $ render postCss
     fs <- listDirectory "./css"
     forM_ fs $ \f -> do
         copyFile ("./css/" ++ f) ("./site/css/" ++ f)
@@ -163,8 +187,10 @@ main = do
         )
     forM_ config $ \p -> do
         let (_, _, _, [pa, f]) = postPath p =~ filePathRegex :: (String, String, String, [String])
-        fileContent <- runIOorExplode . convMarkdown =<< readFile (postPath p)
-        writeFile ("./site/posts/" ++ f ++ ".html") (renderHtml (blogPost (Post' (postTitle p) (postDate p) fileContent)))
+        -- fileContent <- runIOorExplode . convMarkdown =<< readFile (postPath p)
+        callProcess "pandoc" ["-s", "--katex", postPath p, "-o", pa ++ f ++ ".html", "-c", "../css/post.css"]
+        copyFile (pa ++ f ++ ".html") ("./site/posts/" ++ f ++ ".html")
+        -- writeFile ("./site/posts/" ++ f ++ ".html") (renderHtml (blogPost (Post' (postTitle p) (postDate p) fileContent)))
   where
     filePathRegex = "(.*)/(.*)\\..*" :: String
     grabFilename  = "/(.*)\\..*"
