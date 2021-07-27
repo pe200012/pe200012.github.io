@@ -7,7 +7,7 @@ body
 
 nav ul
 {
-  font-family : "Helvetica","Arial","Sans-Serif", sans-serif,monospace;
+  font-family : "Source Han Sans","Helvetica","Arial","Sans-Serif", sans-serif,monospace;
   padding     : 0px 0px 0px 0px;
   list-style  : none none none;
   font-weight : bold;
@@ -15,7 +15,7 @@ nav ul
 
 footer ul
 {
-  font-family : "Helvetica","Arial","Sans-Serif", sans-serif,monospace;
+  font-family : "Source Han Sans","Helvetica","Arial","Sans-Serif", sans-serif,monospace;
   padding     : 0px 0px 0px 0px;
   list-style  : none none none;
   font-weight : bold;

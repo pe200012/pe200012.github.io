@@ -1,0 +1,98 @@
+
+*
+{
+  position           : relative;
+  -webkit-box-sizing : border-box;
+  -moz-box-sizing    : border-box;
+  -ms-box-sizing     : border-box;
+  -o-box-sizing      : border-box;
+  box-sizing         : border-box;
+}
+
+body
+{
+  padding      : 2% auto 2% auto;
+  margin-left  : auto;
+  margin-right : auto;
+  width        : 80%;
+  font-family  : "Source Han Sans","Helvetica","Arial","Sans-Serif", sans-serif,monospace;
+}
+
+nav ul
+{
+  font-family : "Helvetica","Arial","Sans-Serif", sans-serif,monospace;
+  padding     : 0px 0px 0px 0px;
+  list-style  : none none none;
+  font-weight : bold;
+}
+
+footer ul
+{
+  font-family : "Helvetica","Arial","Sans-Serif", sans-serif,monospace;
+  padding     : 0px 0px 0px 0px;
+  list-style  : none none none;
+  font-weight : bold;
+}
+
+nav ul li
+{
+  display      : inline;
+  margin-right : 20px;
+}
+
+footer ul li
+{
+  display      : inline;
+  margin-right : 20px;
+}
+
+a
+{
+  text-decoration : none;
+  color           : #999999;
+}
+
+a:hover
+{
+  text-decoration : underline;
+}
+
+h1
+{
+  font-size : 3em;
+}
+
+p
+{
+  font-size   : 1em;
+  line-height : 1.39999em;
+  color       : #333333;
+}
+
+footer
+{
+  border-top : solid 1px #d5d5d5;
+}
+
+ul.posts
+{
+  margin    : 20px auto 40px auto;
+  font-size : 0.8em;
+}
+
+ul.posts li
+{
+  list-style : none none none;
+}
+
+p.author
+{
+  font-size     : 1em;
+  color         : #999999;
+  margin-bottom : 0% !important;
+  margin-top    : 4px !important;
+  height        : 24px;
+}
+
+
+/* Generated with Clay, http://fvisser.nl/clay */
