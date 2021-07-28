@@ -13,6 +13,7 @@ import           Clay                           ( render )
 import           Control.Monad                  ( (<=<)
                                                 , forM_
                                                 )
+import           Data.List                      ( foldl' )
 import           Data.String                    ( fromString )
 import qualified Data.Text                     as Text
 import qualified Data.Text.IO                  as Text
@@ -44,6 +45,7 @@ import           Style                          ( index
 import           System.Directory               ( copyFile
                                                 , createDirectoryIfMissing
                                                 , listDirectory
+                                                , removeFile
                                                 , renameFile
                                                 )
 import           System.Process                 ( callProcess )
@@ -85,12 +87,18 @@ import           Text.Pandoc                    ( HTMLMathMethod(..)
                                                 , WriterOptions(writerHTMLMathMethod, writerReferenceLinks, writerWrapText)
                                                 , def
                                                 , getAllExtensions
+                                                , githubMarkdownExtensions
                                                 , readMarkdown
                                                 , runIOorExplode
                                                 , strictExtensions
                                                 , writeHtml5
+                                                , writeMarkdown
                                                 )
-import           Text.Regex.TDFA                ( (=~) )
+import           Text.Regex.TDFA                ( (=~)
+                                                , AllMatches(AllMatches, getAllMatches)
+                                                , Regex
+                                                , RegexContext(match)
+                                                )
 
 siteIndex :: Html
 siteIndex = docTypeHtml $ do
@@ -170,10 +178,24 @@ blogPost post = docTypeHtml $ do
 convMarkdown :: PandocMonad m => Text -> m Html
 convMarkdown =
     (   writeHtml5 (def { writerReferenceLinks = True, writerHTMLMathMethod = KaTeX "", writerWrapText = WrapNone })
-        <=< readMarkdown (def { readerExtensions = strictExtensions, readerColumns = 0 })
+        <=< readMarkdown (def { readerExtensions = getAllExtensions "markdown", readerColumns = 0 })
         )
         . Text.pack
         . unpack
+
+-- >>> replaceAll "(?<=c)aa" (const "bb") "caaaa"
+-- Explict error in module Text.Regex.TDFA.String : Text.Regex.TDFA.String died: parseRegex for Text.Regex.TDFA.String failed:"(?<=c)aa" (line 1, column 2):
+-- unexpected "?"
+-- expecting empty () or anchor ^ or $ or an atom
+
+replaceAll :: String -> (String -> String) -> String -> String
+replaceAll re f s = start end
+  where
+    (_, end, start) = foldl' go (0, s, id) $ getAllMatches (s =~ re :: AllMatches [] (Int, Int))
+    go (ind, read, write) (off, len) =
+        let (skip   , start    ) = splitAt (off - ind) read
+            (matched, remaining) = splitAt len start
+        in  (off + len, remaining, write . (skip ++) . (f matched ++))
 
 data Post = Post
     { postTitle :: Text
@@ -208,7 +230,15 @@ main = do
         )
     forM_ config $ \p -> do
         let (_, _, _, [pa, f]) = postPath p =~ filePathRegex :: (String, String, String, [String])
-        fileContent <- runIOorExplode . convMarkdown =<< readFile (postPath p)
+        copyFile (postPath p) ("./site/posts/" ++ f ++ ".md")
+        -- callProcess "sed" ["-i", "s/\\$\\$\\([^$]*\\)\\$\\$/<span class=\"math display\">\\1<\\/span>/g", "./site/posts/" ++ f ++ ".md"]
+        -- callProcess "sed" ["-i", "s/\\$\\([^$]*\\)\\$/<span class=\"math inline\">\\1<\\/span>/g", "./site/posts/" ++ f ++ ".md"]
+        callProcess "sed" ["-i", "s/#### *\\(.*\\)/<h4 id=\"\\1\">\\1<\\/h4>/g", "./site/posts/" ++ f ++ ".md"]
+        callProcess "sed" ["-i", "s/### *\\(.*\\)/<h3 id=\"\\1\">\\1<\\/h3>/g", "./site/posts/" ++ f ++ ".md"]
+        callProcess "sed" ["-i", "s/## *\\(.*\\)/<h2 id=\"\\1\">\\1<\\/h2>/g", "./site/posts/" ++ f ++ ".md"]
+        callProcess "sed" ["-i", "s/# *\\(.*\\)/<h1 id=\"\\1\">\\1<\\/h1>/g", "./site/posts/" ++ f ++ ".md"]
+        fileContent <- runIOorExplode . convMarkdown =<< readFile ("./site/posts/" ++ f ++ ".md")
+        removeFile ("./site/posts/" ++ f ++ ".md")
         -- callProcess "pandoc" ["-s", "--katex", postPath p, "-o", pa ++ f ++ ".html", "-c", "../css/post.css"]
         -- renameFile (pa ++ f ++ ".html") ("./site/posts/" ++ f ++ ".html")
         writeFile ("./site/posts/" ++ f ++ ".html") (renderHtml (blogPost (Post' (postTitle p) (postDate p) fileContent)))
