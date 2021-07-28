@@ -233,10 +233,10 @@ main = do
         copyFile (postPath p) ("./site/posts/" ++ f ++ ".md")
         -- callProcess "sed" ["-i", "s/\\$\\$\\([^$]*\\)\\$\\$/<span class=\"math display\">\\1<\\/span>/g", "./site/posts/" ++ f ++ ".md"]
         -- callProcess "sed" ["-i", "s/\\$\\([^$]*\\)\\$/<span class=\"math inline\">\\1<\\/span>/g", "./site/posts/" ++ f ++ ".md"]
-        callProcess "sed" ["-i", "s/#### *\\(.*\\)/<h4 id=\"\\1\">\\1<\\/h4>/g", "./site/posts/" ++ f ++ ".md"]
-        callProcess "sed" ["-i", "s/### *\\(.*\\)/<h3 id=\"\\1\">\\1<\\/h3>/g", "./site/posts/" ++ f ++ ".md"]
-        callProcess "sed" ["-i", "s/## *\\(.*\\)/<h2 id=\"\\1\">\\1<\\/h2>/g", "./site/posts/" ++ f ++ ".md"]
-        callProcess "sed" ["-i", "s/# *\\(.*\\)/<h1 id=\"\\1\">\\1<\\/h1>/g", "./site/posts/" ++ f ++ ".md"]
+        callProcess "perl" ["-i", "-pe", "s/(?<!\\()#### *(.*)/<h4 id=\"\\1\">\\1<\\/h4>/g", "./site/posts/" ++ f ++ ".md"]
+        callProcess "perl" ["-i", "-pe", "s/(?<!\\()### *(.*)/<h3 id=\"\\1\">\\1<\\/h3>/g", "./site/posts/" ++ f ++ ".md"]
+        callProcess "perl" ["-i", "-pe", "s/(?<!\\()## *(.*)/<h2 id=\"\\1\">\\1<\\/h2>/g", "./site/posts/" ++ f ++ ".md"]
+        callProcess "perl" ["-i", "-pe", "s/(?<!\\()# *(.*)/<h1 id=\"\\1\">\\1<\\/h1>/g", "./site/posts/" ++ f ++ ".md"]
         fileContent <- runIOorExplode . convMarkdown =<< readFile ("./site/posts/" ++ f ++ ".md")
         removeFile ("./site/posts/" ++ f ++ ".md")
         -- callProcess "pandoc" ["-s", "--katex", postPath p, "-o", pa ++ f ++ ".html", "-c", "../css/post.css"]
