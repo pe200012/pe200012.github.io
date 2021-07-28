@@ -80,12 +80,14 @@ import           Text.Blaze.Html5.Attributes    ( charset
                                                 )
 import           Text.Pandoc                    ( HTMLMathMethod(..)
                                                 , PandocMonad
-                                                , ReaderOptions(readerExtensions)
-                                                , WriterOptions(writerHTMLMathMethod, writerReferenceLinks)
+                                                , ReaderOptions(readerColumns, readerExtensions)
+                                                , WrapOption(WrapAuto, WrapNone)
+                                                , WriterOptions(writerHTMLMathMethod, writerReferenceLinks, writerWrapText)
                                                 , def
                                                 , getAllExtensions
                                                 , readMarkdown
                                                 , runIOorExplode
+                                                , strictExtensions
                                                 , writeHtml5
                                                 )
 import           Text.Regex.TDFA                ( (=~) )
@@ -167,7 +169,8 @@ blogPost post = docTypeHtml $ do
 
 convMarkdown :: PandocMonad m => Text -> m Html
 convMarkdown =
-    (writeHtml5 (def { writerReferenceLinks = True, writerHTMLMathMethod = KaTeX "" }) <=< readMarkdown (def { readerExtensions = getAllExtensions "markdown" })
+    (   writeHtml5 (def { writerReferenceLinks = True, writerHTMLMathMethod = KaTeX "", writerWrapText = WrapNone })
+        <=< readMarkdown (def { readerExtensions = strictExtensions, readerColumns = 0 })
         )
         . Text.pack
         . unpack
