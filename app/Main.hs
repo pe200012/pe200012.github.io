@@ -44,6 +44,7 @@ import           Style                          ( index
 import           System.Directory               ( copyFile
                                                 , createDirectoryIfMissing
                                                 , listDirectory
+                                                , renameFile
                                                 )
 import           System.Process                 ( callProcess )
 import           Text.Blaze.Html.Renderer.Text  ( renderHtml )
@@ -145,14 +146,30 @@ blogPost post = docTypeHtml $ do
         link ! rel "stylesheet" ! href "https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css"
         script ! src "https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js" $ pure ()
         script ! src "https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js" ! onload "renderMathInElement(document.body);" $ pure ()
-        script "renderMathInElement(document.body,{delimiters: [{left: \"$$\", right: \"$$\", display: true},{left: \"$\", right: \"$\", display: false}]});"
+        script
+            "document.addEventListener(\"DOMContentLoaded\", function () {\
+                \ var mathElements = document.getElementsByClassName(\"math\");\
+                \ var macros = [];\
+                \ for (var i = 0; i < mathElements.length; i++) {\
+                \  var texText = mathElements[i].firstChild;\
+                \  if (mathElements[i].tagName == \"SPAN\") {\
+                \   katex.render(texText.data, mathElements[i], {\
+                \    displayMode: mathElements[i].classList.contains('display'),\
+                \    throwOnError: false,\
+                \    macros: macros,\
+                \    fleqn: false\
+                \   });\
+                \}}});"
     body $ do
         h1 $ toHtml (postTitle' post)
         H.div ! class_ "post-content" $ postContent post
 
--- convMarkdown :: PandocMonad m => Text -> m Html
--- convMarkdown =
-    -- (writeHtml5 (def { writerReferenceLinks = True }) <=< readMarkdown (def { readerExtensions = getAllExtensions "markdown" })) . Text.pack . unpack
+convMarkdown :: PandocMonad m => Text -> m Html
+convMarkdown =
+    (writeHtml5 (def { writerReferenceLinks = True, writerHTMLMathMethod = KaTeX "" }) <=< readMarkdown (def { readerExtensions = getAllExtensions "markdown" })
+        )
+        . Text.pack
+        . unpack
 
 data Post = Post
     { postTitle :: Text
@@ -187,10 +204,10 @@ main = do
         )
     forM_ config $ \p -> do
         let (_, _, _, [pa, f]) = postPath p =~ filePathRegex :: (String, String, String, [String])
-        -- fileContent <- runIOorExplode . convMarkdown =<< readFile (postPath p)
-        callProcess "pandoc" ["-s", "--katex", postPath p, "-o", pa ++ f ++ ".html", "-c", "../css/post.css"]
-        copyFile (pa ++ f ++ ".html") ("./site/posts/" ++ f ++ ".html")
-        -- writeFile ("./site/posts/" ++ f ++ ".html") (renderHtml (blogPost (Post' (postTitle p) (postDate p) fileContent)))
+        fileContent <- runIOorExplode . convMarkdown =<< readFile (postPath p)
+        -- callProcess "pandoc" ["-s", "--katex", postPath p, "-o", pa ++ f ++ ".html", "-c", "../css/post.css"]
+        -- renameFile (pa ++ f ++ ".html") ("./site/posts/" ++ f ++ ".html")
+        writeFile ("./site/posts/" ++ f ++ ".html") (renderHtml (blogPost (Post' (postTitle p) (postDate p) fileContent)))
   where
     filePathRegex = "(.*)/(.*)\\..*" :: String
     grabFilename  = "/(.*)\\..*"
