@@ -101,7 +101,7 @@ siteIndex = docTypeHtml $ do
         link ! rel "stylesheet" ! href "./css/index.css"
         link ! rel "shortcut icon" ! href "./favicon.ico"
     body $ H.div ! class_ "container" $ do
-        navTemplate
+        navTemplate "./"
         h1 "Partial Evaluation"
         p "I am an undergraduate student of JNU majoring in CS. I prefer functional programming and am currently learning programming language theory."
         footerTemplate
@@ -111,11 +111,11 @@ footerTemplate = footer . ul $ do
     li (a ! href "pe1326263755@gmail.com" $ "EMail")
     li (a ! href "https://github.com/pe200012" $ "github.com/pe200012")
 
-navTemplate :: Html
-navTemplate = nav . ul $ do
-    li (a ! href "./index.html" $ "Home")
-    li (a ! href "./blog.html" $ "Blog")
-    li (a ! href "./about.html" $ "About")
+navTemplate :: FilePath -> Html
+navTemplate pa = nav . ul $ do
+    li (a ! href (fromString (pa ++ "index.html")) $ "Home")
+    li (a ! href (fromString (pa ++ "./blog.html")) $ "Blog")
+    li (a ! href (fromString (pa ++ "./about.html")) $ "About")
 
 blogIndex :: [Post] -> Html
 blogIndex posts = docTypeHtml $ do
@@ -127,7 +127,7 @@ blogIndex posts = docTypeHtml $ do
         link ! rel "stylesheet" ! href "./css/hover.css"
         link ! rel "stylesheet" ! href "./css/index.css"
     body $ H.div ! class_ "container" $ do
-        navTemplate
+        navTemplate "./"
         h1 "Blog"
         ul $ forM_ posts $ \p -> li $ do
             H.span ! class_ "postDate" ! style "white-space: nowrap;" $ toHtml $ postDate p
@@ -141,8 +141,8 @@ blogPost post = docTypeHtml $ do
         meta ! charset "utf-8"
         meta ! name "viewport" ! content "width=device-width, initial-scale=1, maximum-scale=1"
         meta ! name "description" ! content "pe200012's personal site"
-        link ! rel "stylesheet" ! href "./css/hover.css"
-        link ! rel "stylesheet" ! href "./css/post.css"
+        link ! rel "stylesheet" ! href "../css/hover.css"
+        link ! rel "stylesheet" ! href "../css/post.css"
         link ! rel "stylesheet" ! href "https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css"
         script ! src "https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js" $ pure ()
         script ! src "https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js" ! onload "renderMathInElement(document.body);" $ pure ()
@@ -161,6 +161,7 @@ blogPost post = docTypeHtml $ do
                 \   });\
                 \}}});"
     body $ do
+        navTemplate "../"
         h1 $ toHtml (postTitle' post)
         H.div ! class_ "post-content" $ postContent post
 

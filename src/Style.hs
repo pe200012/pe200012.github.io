@@ -2,6 +2,7 @@
 module Style where
 
 import           Clay
+import qualified Clay                          as C
 import           Prelude                 hiding ( (**) )
 
 index :: Css
@@ -46,23 +47,27 @@ postCss = do
         position relative
         boxSizing borderBox
     body ? do
+        margin (px 60) auto (px 60) auto
+        width (pct 70)
         padding (pct 2) auto (pct 2) auto
-        marginLeft auto
-        marginRight auto
-        width (pct 80)
         fontFamily ["Source Han Sans", "Helvetica", "Arial", "Sans-Serif"] [sansSerif, monospace]
     nav ** ul ? listCss
     footer ** ul ? listCss
     nav ** ul ** li ? listItemCss
     footer ** ul ** li ? listItemCss
     a ? do
-        color (rgb 128 0 128)
         textDecoration none
-        paddingBottom (px 1)
-        borderBottom dashed (px 1) (rgb 0 148 146)
-    a # hover ? do
-        textDecoration none
-        borderBottomStyle solid
+        color (rgb 153 153 153) -- rgb hex #999
+    a # hover ? textDecoration underline
+    C.div # ".post-content" ? do
+        a ? do
+            color (rgb 128 0 128)
+            textDecoration none
+            paddingBottom (px 1)
+            borderBottom dashed (px 1) (rgb 0 148 146)
+        a # hover ? do
+            textDecoration none
+            borderBottomStyle solid
     h1 ? do
         fontSize (em 3)
     p ? do
