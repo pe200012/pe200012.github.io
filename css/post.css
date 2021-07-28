@@ -11,11 +11,10 @@
 
 body
 {
-  padding      : 2% auto 2% auto;
-  margin-left  : auto;
-  margin-right : auto;
-  width        : 80%;
-  font-family  : "Source Han Sans","Helvetica","Arial","Sans-Serif", sans-serif,monospace;
+  margin      : 60px auto 60px auto;
+  width       : 70%;
+  padding     : 2% auto 2% auto;
+  font-family : "Source Han Sans","Helvetica","Arial","Sans-Serif", sans-serif,monospace;
 }
 
 nav ul
@@ -48,13 +47,25 @@ footer ul li
 
 a
 {
+  text-decoration : none;
+  color           : #999999;
+}
+
+a:hover
+{
+  text-decoration : underline;
+}
+
+
+div.post-content a
+{
   color           : #800080;
   text-decoration : none;
   padding-bottom  : 1px;
   border-bottom   : dashed 1px #009492;
 }
 
-a:hover
+div.post-content a:hover
 {
   text-decoration     : none;
   border-bottom-style : solid;
