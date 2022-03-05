@@ -1,10 +1,10 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.33.0.
+-- This file has been generated from package.yaml by hpack version 0.34.4.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: ac37940ed26c5034ad726391ae8db92322ef1b46657c52785e107961c3d3b5aa
+-- hash: 636e9de4cc62b5088fe4ae7b4141ff46114943b0405c3ee97b3c3207b1501329
 
 name:           pe200012-github-io
 version:        0.1.0.0
@@ -16,7 +16,7 @@ executable site
   other-modules:
       Paths_pe200012_github_io
   hs-source-dirs:
-      ./.
+      ./
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
