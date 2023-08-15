@@ -1,5 +1,5 @@
 <html><!DOCTYPE HTML>
-<head><title>表达式问题的三种解法</title><link rel="stylesheet" href="/css/index.css"></head><body><nav><ul><li><a href="/">Home</a></li><li><a href="/blog">Blog</a></li><li><a href="/about">About</a></li></ul></nav><div style="border-bottom: 1px solid #000"></div><div class="blog-body"><h1 class="blog-title">表达式问题的三种解法</h1><div class="blog-post-meta"><span class="blog-post-date">2023-05-14</span><span class="blog-post-author">pe200012</span><span class="blog-post-tags">#programming_language</span><span class="blog-post-tags">#Haskell</span></div><p class="blog-paragraph">题图 pixiv：103560446</p><p class="blog-paragraph">本作品采用<a class="blog-link" title="" href="https://creativecommons.org/licenses/by-sa/4.0/">署名-相同方式共享 4.0 国际</a>进行许可。</p><p class="blog-paragraph">本文基于</p><p class="blog-paragraph">[1]Wadler, P.: The Expression Problem. Email (Nov 1998), discussion on the JavaGenericity mailing list</p><p class="blog-paragraph">[2]Zenger, M., Odersky, M.: Independently extensible solutions to the expression prob-lem. In: FOOL’05 (2005)</p><p class="blog-paragraph">[3]Oliveira, B.C.d.S., Cook, W.R. (2012). Extensibility for the Masses. In: <i class="blog-italic">Noble, J. (eds) ECOOP 2012 – Object-Oriented Programming. ECOOP 2012. Lecture Notes in Computer Science</i>, vol 7313. Springer, Berlin, Heidelberg. doi:10.1007/978-3-642-31057-7_2</p><p class="blog-paragraph">[4]SWIERSTRA, W. (2008). Data types à la carte. <i class="blog-italic">Journal of Functional Programming</i>, 18(4), 423-436. doi:10.1017/S0956796808006758</p><p class="blog-paragraph">[5]Bahr, P. (2014). Composing and decomposing data types. <i class="blog-italic">Proceedings of the 10th ACM SIGPLAN Workshop on Generic Programming</i>, p. 71-82, 2014. </p><p class="blog-paragraph">[6]Carette, J., Kiselyov, O., Shan, Cc. (2007). Finally Tagless, Partially Evaluated. In: <i class="blog-italic">Shao, Z. (eds) Programming Languages and Systems. APLAS 2007. Lecture Notes in Computer Science, vol 4807</i>. Springer, Berlin, Heidelberg. </p><p class="blog-paragraph">[7]Kiselyov, O. (2012). Typed Tagless Final Interpreters.In: <i class="blog-italic">Gibbons, J. (eds) Generic and Indexed Programming. Lecture Notes in Computer Science, vol 7470</i>. Springer, Berlin, Heidelberg. </p><p class="blog-paragraph">[8]Kiselyov, O., &amp; Ishii, H. (2015a). Freer Monads, More Extensible Effects. <i class="blog-italic">Proceedings of the 2015 ACM SIGPLAN Symposium on Haskell, 94–105</i>. Presented at the Vancouver, BC, Canada. doi:10.1145/2804302.2804319</p><h2 class="blog-heading-2">表达式问题</h2><p class="blog-paragraph">如何在一个类型内部的 representation 和外部的 behavior 均根据需求不断修改、增加，而无需重新编译乃至修改原有代码的问题称为_表达式问题_(Expression Problem, EP)[Wadler, 1998]</p><blockquote class="blog-quote"><p class="blog-paragraph">要求：<br>双向可扩展性：解决方案必须允许添加新的数据变体和新的操作<br>无修改或重复：现有代码不得被修改或重复<br>分离编译和类型检查：安全检查或编译步骤不得推迟到链接或运行时进行<br>独立可扩展性：不同的拓展可以组合使用[Zenger &amp; Odersky, 2005]</p></blockquote><h3 class="blog-heading-3">在 OOP 中</h3><pre class="blog-code-java"><code>    interface Exp { int eval(); }
+<head><title>表达式问题的三种解法</title><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/java.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/haskell.min.js"></script><script>hljs.highlightAll();</script></head><body><nav><ul><li><a href="/">Home</a></li><li><a href="/blog">Blog</a></li><li><a href="/about">About</a></li></ul></nav><div style="border-bottom: 1px solid #000"></div><div class="blog-body"><h1 class="blog-title">表达式问题的三种解法</h1><div class="blog-post-meta"><span class="blog-post-date">2023-05-14</span><span class="blog-post-author">pe200012</span><span class="blog-post-tags">#programming_language</span><span class="blog-post-tags">#Haskell</span></div><p class="blog-paragraph">题图 pixiv：103560446</p><p class="blog-paragraph">本作品采用<a class="blog-link" title="" href="https://creativecommons.org/licenses/by-sa/4.0/">署名-相同方式共享 4.0 国际</a>进行许可。</p><p class="blog-paragraph">本文基于</p><p class="blog-paragraph">[1]Wadler, P.: The Expression Problem. Email (Nov 1998), discussion on the JavaGenericity mailing list</p><p class="blog-paragraph">[2]Zenger, M., Odersky, M.: Independently extensible solutions to the expression prob-lem. In: FOOL’05 (2005)</p><p class="blog-paragraph">[3]Oliveira, B.C.d.S., Cook, W.R. (2012). Extensibility for the Masses. In: <i class="blog-italic">Noble, J. (eds) ECOOP 2012 – Object-Oriented Programming. ECOOP 2012. Lecture Notes in Computer Science</i>, vol 7313. Springer, Berlin, Heidelberg. doi:10.1007/978-3-642-31057-7_2</p><p class="blog-paragraph">[4]SWIERSTRA, W. (2008). Data types à la carte. <i class="blog-italic">Journal of Functional Programming</i>, 18(4), 423-436. doi:10.1017/S0956796808006758</p><p class="blog-paragraph">[5]Bahr, P. (2014). Composing and decomposing data types. <i class="blog-italic">Proceedings of the 10th ACM SIGPLAN Workshop on Generic Programming</i>, p. 71-82, 2014. </p><p class="blog-paragraph">[6]Carette, J., Kiselyov, O., Shan, Cc. (2007). Finally Tagless, Partially Evaluated. In: <i class="blog-italic">Shao, Z. (eds) Programming Languages and Systems. APLAS 2007. Lecture Notes in Computer Science, vol 4807</i>. Springer, Berlin, Heidelberg. </p><p class="blog-paragraph">[7]Kiselyov, O. (2012). Typed Tagless Final Interpreters.In: <i class="blog-italic">Gibbons, J. (eds) Generic and Indexed Programming. Lecture Notes in Computer Science, vol 7470</i>. Springer, Berlin, Heidelberg. </p><p class="blog-paragraph">[8]Kiselyov, O., &amp; Ishii, H. (2015a). Freer Monads, More Extensible Effects. <i class="blog-italic">Proceedings of the 2015 ACM SIGPLAN Symposium on Haskell, 94–105</i>. Presented at the Vancouver, BC, Canada. doi:10.1145/2804302.2804319</p><h2 class="blog-heading-2">表达式问题</h2><p class="blog-paragraph">如何在一个类型内部的 representation 和外部的 behavior 均根据需求不断修改、增加，而无需重新编译乃至修改原有代码的问题称为_表达式问题_(Expression Problem, EP)[Wadler, 1998]</p><blockquote class="blog-quote"><p class="blog-paragraph">要求：<br>双向可扩展性：解决方案必须允许添加新的数据变体和新的操作<br>无修改或重复：现有代码不得被修改或重复<br>分离编译和类型检查：安全检查或编译步骤不得推迟到链接或运行时进行<br>独立可扩展性：不同的拓展可以组合使用[Zenger &amp; Odersky, 2005]</p></blockquote><h3 class="blog-heading-3">在 OOP 中</h3><pre class="blog-code-java,language-java"><code>    interface Exp { int eval(); }
 
     class Lit implements Exp {
         int x;
@@ -20,7 +20,7 @@
         }
     }
 
-</code></pre><p class="blog-paragraph">添加新的 data constructor 是简单的：</p><pre class="blog-code-java"><code>    interface Exp { int eval(); }
+</code></pre><p class="blog-paragraph">添加新的 data constructor 是简单的：</p><pre class="blog-code-java,language-java"><code>    interface Exp { int eval(); }
 
     class Lit implements Exp {
         int x;
@@ -48,7 +48,7 @@
         }
     }
 
-</code></pre><p class="blog-paragraph">修改 representation 就不那么简单了：如果我们在 IExp 中添加一个格式化输出的方法，那么下面的每一个类都要修改添加对应的实现方法</p><p class="blog-paragraph"><b class="blog-bold">解决方法（Object Algebra）</b></p><blockquote class="blog-quote"><p class="blog-paragraph">An object algebra is a class that implements a generic abstract factory interface, which corresponds to a particular kind of algebraic signature[Oliveira, 2005]</p></blockquote><p class="blog-paragraph">使用 Visitor Pattern</p><pre class="blog-code-java"><code>    interface Exp { &lt;A&gt; A visit(Visitor&lt;A&gt; vis); }
+</code></pre><p class="blog-paragraph">修改 representation 就不那么简单了：如果我们在 IExp 中添加一个格式化输出的方法，那么下面的每一个类都要修改添加对应的实现方法</p><p class="blog-paragraph"><b class="blog-bold">解决方法（Object Algebra）</b></p><blockquote class="blog-quote"><p class="blog-paragraph">An object algebra is a class that implements a generic abstract factory interface, which corresponds to a particular kind of algebraic signature[Oliveira, 2005]</p></blockquote><p class="blog-paragraph">使用 Visitor Pattern</p><pre class="blog-code-java,language-java"><code>    interface Exp { &lt;A&gt; A visit(Visitor&lt;A&gt; vis); }
 
     interface Visitor&lt;A&gt; {
       A lit(Lit a);
@@ -72,7 +72,7 @@
       public Integer add(Add a) { return a.visit(this) + b.visit(this); }
     }
 
-</code></pre><p class="blog-paragraph">无论是加 data constructor 还是 method 都只需修改 visitor，原有的代码无需修改</p><pre class="blog-code-java"><code>
+</code></pre><p class="blog-paragraph">无论是加 data constructor 还是 method 都只需修改 visitor，原有的代码无需修改</p><pre class="blog-code-java,language-java"><code>
     interface Exp { &lt;A&gt; A visit(Visitor&lt;A&gt; vis); }
 
     interface Visitor&lt;A&gt; {
@@ -115,7 +115,7 @@
         public String mult(Mult a) { return &quot;(&quot; + a.left.visit(this) + &quot; * &quot; + a.right.visit(this) + &quot;)&quot;; }
     }
 
-</code></pre><p class="blog-paragraph"><b class="blog-bold">例题</b></p><p class="blog-paragraph"><a class="blog-link" href="https://www.codewars.com/kata/5682e646d5eddc1e21000017">PatternCraft - Visitor</a></p><h2 class="blog-heading-2">在 FP 中</h2><p class="blog-paragraph">在函数式语言中的情形恰好相反，我们可以很轻松地添加新的函数，却不能简单地修改数据的 representation</p><pre class="blog-code-haskell"><code>    data Exp = Lit Int
+</code></pre><p class="blog-paragraph"><b class="blog-bold">例题</b></p><p class="blog-paragraph"><a class="blog-link" href="https://www.codewars.com/kata/5682e646d5eddc1e21000017">PatternCraft - Visitor</a></p><h2 class="blog-heading-2">在 FP 中</h2><p class="blog-paragraph">在函数式语言中的情形恰好相反，我们可以很轻松地添加新的函数，却不能简单地修改数据的 representation</p><pre class="blog-code-haskell,language-haskell"><code>    data Exp = Lit Int
              | Add Exp Exp
           -- | Sub Exp Exp -- ^ 如果我们想要支持减法，下面的代码就需要修改
 
@@ -127,7 +127,7 @@
     prettyprint (Lit x) = show x
     prettyprint (Add x y) = &quot;(&quot; ++ prettyprint x ++ &quot;+&quot; ++ prettyprint y ++ &quot;)&quot;
 
-</code></pre><p class="blog-paragraph">Haskell 没有 OOP，并不能使用 Object Algebra。但是我们有别的解决方案。</p><p class="blog-paragraph"><b class="blog-bold">remove the tags</b></p><p class="blog-paragraph">将原本的数据构造子写作 typeclass 中的 method，添加不同的操作就是为这个 typeclass 实现新的实例。</p><pre class="blog-code-haskell"><code>
+</code></pre><p class="blog-paragraph">Haskell 没有 OOP，并不能使用 Object Algebra。但是我们有别的解决方案。</p><p class="blog-paragraph"><b class="blog-bold">remove the tags</b></p><p class="blog-paragraph">将原本的数据构造子写作 typeclass 中的 method，添加不同的操作就是为这个 typeclass 实现新的实例。</p><pre class="blog-code-haskell,language-haskell"><code>
     class Semantics repr where
         val :: Int -&gt; repr
         add :: repr -&gt; repr -&gt; repr
@@ -143,7 +143,7 @@
         add = \x y -&gt; &quot;(&quot; ++ x ++ &quot;+&quot; ++ y ++ &quot;)&quot;
         mul = \x y -&gt; &quot;(&quot; ++ x ++ &quot;*&quot; ++ y ++ &quot;)&quot;
 
-</code></pre><p class="blog-paragraph">tagless 得名于我们最后的结果里用方法而非代数数据类型（ADT）来表示数据构造。</p><pre class="blog-code-haskell"><code>
+</code></pre><p class="blog-paragraph">tagless 得名于我们最后的结果里用方法而非代数数据类型（ADT）来表示数据构造。</p><pre class="blog-code-haskell,language-haskell"><code>
     -- &gt;&gt;&gt; exp1
     -- 10
     exp1 :: Int
@@ -154,7 +154,7 @@
     exp2 :: String
     exp2 = add (mul (val 2) (val 3)) (val 4)
 
-</code></pre><p class="blog-paragraph">现在我们只需要标注类型就可调用不同的操作</p><p class="blog-paragraph">这个实现依然存在问题，如下：</p><pre class="blog-code-haskell"><code>
+</code></pre><p class="blog-paragraph">现在我们只需要标注类型就可调用不同的操作</p><p class="blog-paragraph">这个实现依然存在问题，如下：</p><pre class="blog-code-haskell,language-haskell"><code>
     class Semantics repr where
         val :: Int -&gt; repr
         add :: repr -&gt; repr -&gt; repr
@@ -171,7 +171,7 @@
     exp1 :: Int
     exp1 = add (bool True) (bool False `and` bool True)
 
-</code></pre><p class="blog-paragraph">我们的语义阻止不了把布尔值相加这种不合法的操作</p><p class="blog-paragraph">稍微改写一下，我们不直接修改最后的结果，而是多加一层 Functor</p><pre class="blog-code-haskell"><code>
+</code></pre><p class="blog-paragraph">我们的语义阻止不了把布尔值相加这种不合法的操作</p><p class="blog-paragraph">稍微改写一下，我们不直接修改最后的结果，而是多加一层 Functor</p><pre class="blog-code-haskell,language-haskell"><code>
     class Semantics repr where
         val :: Int -&gt; repr Int
         add :: repr Int -&gt; repr Int -&gt; repr Int
@@ -179,7 +179,7 @@
         bool :: Bool -&gt; repr Bool
         and :: repr Bool -&gt; repr Bool -&gt; repr Bool
 
-</code></pre><p class="blog-paragraph">然后给每个想要的操作写一个 newtype</p><pre class="blog-code-haskell"><code>
+</code></pre><p class="blog-paragraph">然后给每个想要的操作写一个 newtype</p><pre class="blog-code-haskell,language-haskell"><code>
     newtype Eval a
         = Eval { runEval :: a
                }
@@ -206,7 +206,7 @@
 
         and (Pretty x) (Pretty y) = Pretty (x &lt;&gt; &quot; &amp;&amp; &quot; &lt;&gt; y)
 
-</code></pre><p class="blog-paragraph">问题解决</p><pre class="blog-code-haskell"><code>
+</code></pre><p class="blog-paragraph">问题解决</p><pre class="blog-code-haskell,language-haskell"><code>
     exp1 :: Int
     exp1 = runEval $ add (val 1) (val 2)
 
@@ -216,7 +216,7 @@
     invalidExp :: Int
     invalidExp = runEval $ add (val 1) (bool True) -- ^ Couldn&#39;t match type ‘Bool’ with ‘Int’
 
-</code></pre><p class="blog-paragraph">除了直接计算，我们还可以构建语法树</p><pre class="blog-code-haskell"><code>
+</code></pre><p class="blog-paragraph">除了直接计算，我们还可以构建语法树</p><pre class="blog-code-haskell,language-haskell"><code>
     data Tree a = Leaf String a | Node String [ Tree a ]
         deriving ( Show, Eq )
 
@@ -234,33 +234,33 @@
     exp3 :: Tree Int
     exp3 = add (add (val 4) (val 5)) (add (val 2) (val 3))
 
-</code></pre><p class="blog-paragraph"><b class="blog-bold">Fixing</b></p><p class="blog-paragraph">将我们的 constructor 拆分开来</p><pre class="blog-code-haskell"><code>
+</code></pre><p class="blog-paragraph"><b class="blog-bold">Fixing</b></p><p class="blog-paragraph">将我们的 constructor 拆分开来</p><pre class="blog-code-haskell,language-haskell"><code>
     data Val e = Val Int
         deriving ( Functor )
 
     data Add e = Add e e
         deriving ( Functor )
 
-</code></pre><p class="blog-paragraph">首先我们需要表达任意次函数应用的嵌套。我们引入了 Fix 不动点来解决这个问题。</p><pre class="blog-code-haskell"><code>
+</code></pre><p class="blog-paragraph">首先我们需要表达任意次函数应用的嵌套。我们引入了 Fix 不动点来解决这个问题。</p><pre class="blog-code-haskell,language-haskell"><code>
     newtype Fix f = In { out :: f (Fix f) }
 
-</code></pre><p class="blog-paragraph">其中 In 的类型为 <code class="blog-code-inline">f (Fix f) -&gt; Fix f</code>， out 的类型为 <code class="blog-code-inline">Fix f -&gt; f (Fix f)</code></p><p class="blog-paragraph">有了 Fix 我们就可以表达树状结构的表达式</p><p class="blog-paragraph">现在我们需要表达不同操作之间的组合，这就引入了 coproduct</p><pre class="blog-code-haskell"><code>
+</code></pre><p class="blog-paragraph">其中 In 的类型为 <code class="blog-code-inline">f (Fix f) -&gt; Fix f</code>， out 的类型为 <code class="blog-code-inline">Fix f -&gt; f (Fix f)</code></p><p class="blog-paragraph">有了 Fix 我们就可以表达树状结构的表达式</p><p class="blog-paragraph">现在我们需要表达不同操作之间的组合，这就引入了 coproduct</p><pre class="blog-code-haskell,language-haskell"><code>
     infix r 1 :+:
     data (:+:) :: (Type -&gt; Type) -&gt; (Type -&gt; Type) -&gt; Type -&gt; Type where
         Inl :: f a -&gt; (f :+: g) a
         Inr :: g a -&gt; (f :+: g) a
 
-</code></pre><p class="blog-paragraph">两个 Functor 的 coproduct 还是 Functor</p><pre class="blog-code-haskell"><code>
+</code></pre><p class="blog-paragraph">两个 Functor 的 coproduct 还是 Functor</p><pre class="blog-code-haskell,language-haskell"><code>
     instance ( Functor f, Functor g ) =&gt; Functor (f :+: g) where
         fmap :: (Functor f, Functor g) =&gt; (a -&gt; b) -&gt; (f :+: g) a -&gt; (f :+: g) b
         fmap f (Inl x) = Inl (fmap f x)
         fmap f (Inr x) = Inr (fmap f x)
 
-</code></pre><p class="blog-paragraph">如果 f 是 Functor，我们可以折叠任意层数的 f (F-algebra : )</p><pre class="blog-code-haskell"><code>
+</code></pre><p class="blog-paragraph">如果 f 是 Functor，我们可以折叠任意层数的 f (F-algebra : )</p><pre class="blog-code-haskell,language-haskell"><code>
     foldFix :: Functor f =&gt; (f a -&gt; a) -&gt; Fix f -&gt; a
     foldFix f = f . fmap (foldFix f) . out
 
-</code></pre><p class="blog-paragraph">其中 <code class="blog-code-inline">foldFix f :: Fix f -&gt; a</code>，<code class="blog-code-inline">fmap (foldFix f) :: f (Fix f) -&gt; f a</code></p><p class="blog-paragraph">foldFix 的第一个参数被称为 algebra，她每一次折叠一层 f a，而 foldFix 将这些操作应用到每一层</p><p class="blog-paragraph"><b class="blog-bold">Evaluating</b></p><p class="blog-paragraph">定义运算：</p><pre class="blog-code-haskell"><code>
+</code></pre><p class="blog-paragraph">其中 <code class="blog-code-inline">foldFix f :: Fix f -&gt; a</code>，<code class="blog-code-inline">fmap (foldFix f) :: f (Fix f) -&gt; f a</code></p><p class="blog-paragraph">foldFix 的第一个参数被称为 algebra，她每一次折叠一层 f a，而 foldFix 将这些操作应用到每一层</p><p class="blog-paragraph"><b class="blog-bold">Evaluating</b></p><p class="blog-paragraph">定义运算：</p><pre class="blog-code-haskell,language-haskell"><code>
     class Functor f =&gt; Eval f where
         evalAlgebra :: f Int -&gt; Int
 
@@ -286,11 +286,11 @@
     -- &gt;&gt;&gt; exp1
     -- 3
 
-</code></pre><p class="blog-paragraph"><b class="blog-bold">Automating Injection</b></p><p class="blog-paragraph">现在这个写法很别扭，写一个表达式要套很多层 In。我们可以用自动化注入来解决这个问题。</p><pre class="blog-code-haskell"><code>
+</code></pre><p class="blog-paragraph"><b class="blog-bold">Automating Injection</b></p><p class="blog-paragraph">现在这个写法很别扭，写一个表达式要套很多层 In。我们可以用自动化注入来解决这个问题。</p><pre class="blog-code-haskell,language-haskell"><code>
     class ( Functor sub, Functor sup ) =&gt; sub :&lt;: sup where
         inj :: sub a -&gt; sup a
 
-</code></pre><p class="blog-paragraph"><code class="blog-code-inline">:&lt;:</code> 称为 <i class="blog-italic">Subsume</i>。 这一段 typeclass 定义了 <a class="blog-link" href="https://en.wikipedia.org/wiki/Subtyping">Subtyping</a> (sub 是 sup 的子类型，sup 是 sub 的父类型)。OOP 中提及到的多态基本都是子类型多态。一句话解释：subtyping 是类型上的偏序关系，如果 A 是 B 的子类型，那么 A 可以出现在任何 B 应该出现的位置。</p><pre class="blog-code-haskell"><code>
+</code></pre><p class="blog-paragraph"><code class="blog-code-inline">:&lt;:</code> 称为 <i class="blog-italic">Subsume</i>。 这一段 typeclass 定义了 <a class="blog-link" href="https://en.wikipedia.org/wiki/Subtyping">Subtyping</a> (sub 是 sup 的子类型，sup 是 sub 的父类型)。OOP 中提及到的多态基本都是子类型多态。一句话解释：subtyping 是类型上的偏序关系，如果 A 是 B 的子类型，那么 A 可以出现在任何 B 应该出现的位置。</p><pre class="blog-code-haskell,language-haskell"><code>
     instance Functor f =&gt; f :&lt;: f where
         inj = id
 
@@ -300,7 +300,7 @@
     instance ( Functor f, Functor g, Functor h, f :&lt;: g ) =&gt; f :&lt;: (h :+: g) where
         inj = Inr . inj
 
-</code></pre><p class="blog-paragraph">补全偏序的性质如上。</p><p class="blog-paragraph">接下来的操作就很简单了：</p><pre class="blog-code-haskell"><code>
+</code></pre><p class="blog-paragraph">补全偏序的性质如上。</p><p class="blog-paragraph">接下来的操作就很简单了：</p><pre class="blog-code-haskell,language-haskell"><code>
     inject :: (g :&lt;: f) =&gt; g (Fix f) -&gt; Fix f
     inject = In . inj
 
@@ -316,7 +316,7 @@
     -- &gt;&gt;&gt; eval exp2
     -- 10
 
-</code></pre><p class="blog-paragraph">如上，我们不再需要手写 Fix 的结构，typeclass 会自动推断我们需要的类型然后注入。</p><p class="blog-paragraph">拓展新的数据和新的操作十分简单：</p><pre class="blog-code-haskell"><code>
+</code></pre><p class="blog-paragraph">如上，我们不再需要手写 Fix 的结构，typeclass 会自动推断我们需要的类型然后注入。</p><p class="blog-paragraph">拓展新的数据和新的操作十分简单：</p><pre class="blog-code-haskell,language-haskell"><code>
     data Mult a = Mult a a
 
     instance Eval Mult where
@@ -358,7 +358,7 @@
     -- &gt;&gt;&gt; display exp3
     -- &quot;(((1 + 2) + (3 + 4)) + (5 * 6))&quot;
 
-</code></pre><p class="blog-paragraph"><b class="blog-bold">PS: type family 的写法</b></p><p class="blog-paragraph">上面用 typeclass 需要用到 overlapping instances，并且存在限制：<code class="blog-code-inline">f :&lt;: g</code> 中的 f 只能是 atomic 的，而 g 必须写成链表的形式，这意味着类似于以下合法的关系没有办法表示出来：</p><pre class="blog-code-haskell"><code>
+</code></pre><p class="blog-paragraph"><b class="blog-bold">PS: type family 的写法</b></p><p class="blog-paragraph">上面用 typeclass 需要用到 overlapping instances，并且存在限制：<code class="blog-code-inline">f :&lt;: g</code> 中的 f 只能是 atomic 的，而 g 必须写成链表的形式，这意味着类似于以下合法的关系没有办法表示出来：</p><pre class="blog-code-haskell,language-haskell"><code>
     type Arith = Val :+: Add
 
     type NonAtomic = Arith :&lt;: (Val :+: (Add :+: Mult))
@@ -376,12 +376,12 @@
     op3 :: Fix ((Add :+: Mult) :+: Val)
     op3 = val0 2 &lt;+&gt; val0 3
 
-</code></pre><p class="blog-paragraph">问题的根源在于 overlapping typeclass 没有优先级：正常 typeclass 会优先匹配更“精细”的实例，而当实例的“匹配度”一样的时候 GHC 就无法判断应该应用哪一个 instance。</p><p class="blog-paragraph">解决方法是使用 closed type family[Bahr (2014)]：</p><p class="blog-paragraph"><a class="blog-link" href="https://en.wikipedia.org/wiki/Type_family">Type Family</a> 是在 type-level 上的函数，把类型和其他类型关联到一起</p><pre class="blog-code-haskell"><code>
+</code></pre><p class="blog-paragraph">问题的根源在于 overlapping typeclass 没有优先级：正常 typeclass 会优先匹配更“精细”的实例，而当实例的“匹配度”一样的时候 GHC 就无法判断应该应用哪一个 instance。</p><p class="blog-paragraph">解决方法是使用 closed type family[Bahr (2014)]：</p><p class="blog-paragraph"><a class="blog-link" href="https://en.wikipedia.org/wiki/Type_family">Type Family</a> 是在 type-level 上的函数，把类型和其他类型关联到一起</p><pre class="blog-code-haskell,language-haskell"><code>
     type family Element (a :: Type) :: Type where
         Element [a] = a
         Element Text = Char
 
-</code></pre><p class="blog-paragraph">这种运算在编译期完成。</p><p class="blog-paragraph">考虑 <code class="blog-code-inline">f :&lt;: g</code> 表示在 g 中存在 f，我们只要表示出这个搜索的过程即可。</p><p class="blog-paragraph">对上面三个问题的解决方法：</p><ol class="blog-ordered-list"><li><p class="blog-paragraph">将 f 中多个成员拆开来分别在 g 中查找，然后用 sum 表示出来</p></li><li><p class="blog-paragraph">分别搜索 g 的分支，并且对两个分支都出现 f 的情况予以拒绝</p></li></ol><pre class="blog-code-haskell"><code>
+</code></pre><p class="blog-paragraph">这种运算在编译期完成。</p><p class="blog-paragraph">考虑 <code class="blog-code-inline">f :&lt;: g</code> 表示在 g 中存在 f，我们只要表示出这个搜索的过程即可。</p><p class="blog-paragraph">对上面三个问题的解决方法：</p><ol class="blog-ordered-list"><li><p class="blog-paragraph">将 f 中多个成员拆开来分别在 g 中查找，然后用 sum 表示出来</p></li><li><p class="blog-paragraph">分别搜索 g 的分支，并且对两个分支都出现 f 的情况予以拒绝</p></li></ol><pre class="blog-code-haskell,language-haskell"><code>
     type family Or (a :: Bool) (b :: Bool) :: Bool where
         Or &#39;False &#39;False = &#39;False
         Or _ _ = &#39;True
@@ -449,7 +449,7 @@
     prj :: forall f g a. Subsume (Elem f g) f g =&gt; g a -&gt; Maybe (f a)
     prj = prj&#39; (Proxy @(Elem f g))
 
-</code></pre><p class="blog-paragraph">之后的用法和之前一致</p><pre class="blog-code-haskell"><code>
+</code></pre><p class="blog-paragraph">之后的用法和之前一致</p><pre class="blog-code-haskell,language-haskell"><code>
     inject :: Subsume (Elem f g) f g =&gt; f (Fix g) -&gt; Fix g
     inject = In . inj
 
